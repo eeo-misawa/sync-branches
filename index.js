@@ -16,7 +16,8 @@ async function run() {
       core.getInput("CONTENT_COMPARISON").toLowerCase() === "true";
     const reviewers = JSON.parse(core.getInput("REVIEWERS"));
     const team_reviewers = JSON.parse(core.getInput("TEAM_REVIEWERS"));
-    const labels = JSON.parse(core.getInput("LABELS"));
+    // const labels = JSON.parse(core.getInput("LABELS"));
+    const labels = getStringAsArray(core.getInput("LABELS"));
 
     console.log(
       `Should a pull request to ${toBranch} from ${fromBranch} be created?`
@@ -112,6 +113,9 @@ async function hasContentDifference(octokit, fromBranch, toBranch) {
     per_page: 1,
   });
   return response.files.length > 0;
+}
+function getStringAsArray(str) {
+  return str.split(/[\n,]+/).map(s => s.trim()).filter(x => x !== '')
 }
 
 run();
